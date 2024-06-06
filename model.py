@@ -93,4 +93,94 @@ X_test
 # Showing y_test vector
 y_test
 
+# Importing models for regression
+from sklearn.linear_model import LinearRegression  # For Linear Regression
+from sklearn.svm import SVR  # For Support Vector Machine Regression
+from sklearn.ensemble import RandomForestRegressor  # For Random Forest Regression
+from sklearn.ensemble import GradientBoostingRegressor  # For Gradient Boosting Regression
 
+# Training the model
+lr = LinearRegression()  # Instance for Linear Regression
+lr.fit(X_train, y_train)
+
+svm = SVR()  # Instance for SVM
+svm.fit(X_train, y_train)
+
+rf = RandomForestRegressor()  # Instance for Random Forest Regression
+rf.fit(X_train, y_train)
+
+gr = GradientBoostingRegressor()  # Instanceo for Gradient Boosting Regression
+gr.fit(X_train, y_train)
+
+# Data Prediction on Test Data
+y_lr = lr.predict(X_test)
+y_svm = svm.predict(X_test)
+y_rf = rf.predict(X_test)
+y_gr = gr.predict(X_test)
+
+# Assinging Data predictions using different regressions into a Data frame
+df_pred = pd.DataFrame({'Actual':y_test,
+                        'Lin.Reg.':y_lr,
+                        'SVM':y_svm,
+                        'Ran.Forest':y_rf,
+                        'Grad.Boost.':y_gr})
+
+# Displaying Data Predictions DataFrame
+df_pred
+
+# Performance of models through visualization
+# Importing required libraries
+import matplotlib.pyplot as plt
+
+# Showing 4 plots at a time
+plt.subplot(221)
+plt.plot(df_pred['Actual'].iloc[0:11], label = 'Actual')
+plt.plot(df_pred['Lin.Reg.'].iloc[0:11], label = 'Linear Reg')
+plt.legend()
+
+plt.subplot(222)
+plt.plot(df_pred['Actual'].iloc[0:11], label = 'Actual')
+plt.plot(df_pred['SVM'].iloc[0:11], label = 'SVM')
+plt.legend()
+
+plt.subplot(223)
+plt.plot(df_pred['Actual'].iloc[0:11], label = 'Actual')
+plt.plot(df_pred['Ran.Forest'].iloc[0:11], label = 'Random Forest')
+plt.legend()
+
+plt.subplot(224)
+plt.plot(df_pred['Actual'].iloc[0:11], label = 'Actual')
+plt.plot(df_pred['Grad.Boost.'].iloc[0:11], label = 'Gradient Boosting')
+plt.legend()
+
+plt.tight_layout()
+
+## Out of 4 models Gradient Boosting Regression gave closer results with Actual values
+
+# Evaluating the models using R square. R Square values is used to measure the goodness of fit
+from sklearn import metrics
+
+score_lr = metrics.r2_score(y_test, y_lr)  # For Lin. Reg. model
+score_svm = metrics.r2_score(y_test, y_svm)  # For SVM model
+score_rf = metrics.r2_score(y_test, y_rf)  # For Random Forest model
+score_gr = metrics.r2_score(y_test, y_gr)  # For Gradient Boosting model
+
+# Printing score of each regressor
+print(score_lr, score_svm, score_rf, score_gr)
+
+## Gradient Boosting Regression performing good than remaining 3 models
+
+# Considering new data to predict with some testing values
+new_data = {'age': 28,
+           'sex':1,
+           'bmi':42.1,
+           'children':1,
+            'smoker':0,
+           'region':3}
+
+new_df = pd.DataFrame(new_data, index = [0])
+new_df
+
+# Prediction with new data
+pred = gr.predict(new_df)
+print(pred)
